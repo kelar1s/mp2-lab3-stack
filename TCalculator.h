@@ -1,7 +1,11 @@
 #pragma once
+
+#include <math.h>
 #include <iostream>
 #include <string>
-#include "TStack.h"
+#include "TStack.cpp"
+
+
 using namespace std;
 
 
@@ -9,16 +13,17 @@ class TCalculator {
 	string infix;
 	string postfix;
 	TStack<double> stNum;
-	TStack<char> stChar; 
+	TStack<char> stChar;
 public:
 	TCalculator();
 
-	void toPostfix();
 	double CalcPostfix();
-	
 	//void Calc();
 
-	void setInfix();
+	int Prior(char op);
+	bool Check(string str);
+
+	void setInfix(string str);
 	string getInfix();
 	void setPostfix();
 	string getPostfix();
