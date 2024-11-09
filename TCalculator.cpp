@@ -2,16 +2,25 @@
 
 TCalculator::TCalculator(): stNum(100), stChar(100) {}
 
-double TCalculator::CalcPostfix() {
+double TCalculator::CalcPostfix() 
+{
     stNum.Clear();
-    for (int i = 0; i < postfix.size(); i++) {
+    int i = 0;
+    for (i; i < postfix.size(); i++) {
+        /*if (postfix[0] = '-') {
+            size_t idx;
+            double ntmp = -1 * stod(&postfix[1], &idx);
+            stNum.Push(ntmp);
+            i += idx - 1;
+            ++i;
+        }*/
         if (postfix[i] >= '0' && postfix[i] <= '9' || postfix[i] == '.') {
             size_t idx;
             double ntmp = stod(&postfix[i], &idx);
             stNum.Push(ntmp);
             i += idx - 1;
         }
-        else if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^') {
+        else if (i != 0 || postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^') {
             double secondNum = stNum.Pop();
             double firstNum = stNum.Pop();
             switch (postfix[i])
@@ -43,7 +52,8 @@ double TCalculator::CalcPostfix() {
     return result;
 }
 
-void TCalculator::setInfix(string str) {
+void TCalculator::setInfix(string str) 
+{
  
     if (Check(str)) {
         infix = str;
@@ -53,11 +63,13 @@ void TCalculator::setInfix(string str) {
     }
 }
 
-string TCalculator::getInfix() {
+string TCalculator::getInfix() 
+{
     return infix;
 }
 
-int TCalculator::Prior(char op) {
+int TCalculator::Prior(char op) 
+{
     if (op == '+' || op == '-') {
         return 1;
     }
@@ -73,7 +85,8 @@ int TCalculator::Prior(char op) {
     return -1;
 }
 
-void TCalculator::setPostfix() {
+void TCalculator::setPostfix() 
+{
     postfix = "";
     stChar.Clear();
     string tmp = "(" + infix + ")";
@@ -108,11 +121,13 @@ void TCalculator::setPostfix() {
     }
 }
 
-string TCalculator::getPostfix() {
+string TCalculator::getPostfix() 
+{
     return postfix;
 }
 
-bool TCalculator::Check(string str) {
+bool TCalculator::Check(string str) 
+{
     TStack<char> s(100);
     for (int i = 0; i < str.size(); i++) {
         if (str[i] == '(')
@@ -124,5 +139,5 @@ bool TCalculator::Check(string str) {
             s.Pop();
         }
     }
-    return true;
+    return s.isEmpty();
 }

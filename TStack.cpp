@@ -6,7 +6,8 @@ using namespace std;
 const int MAX_STACK_SIZE = 1000;
 
 template <class T>
-class TStack {
+class TStack 
+{
     T* pMem; 
     int Num;
     int MaxSize;
@@ -32,8 +33,10 @@ public:
 };
 
 template <class T>
-TStack<T>::TStack(int size) {
-    if (size < 0 || size > MAX_STACK_SIZE) {
+TStack<T>::TStack(int size) 
+{
+    if (size < 0 || size > MAX_STACK_SIZE) 
+    {
         throw - 1;
     }
     MaxSize = size;
@@ -42,8 +45,9 @@ TStack<T>::TStack(int size) {
 }
 
 template <class T>
-TStack<T>::TStack(const TStack& oth) {
-    delete[] pMem;
+TStack<T>::TStack(const TStack& oth) 
+{
+    MaxSize = oth.MaxSize;
     Num = oth.Num;
     pMem = new T[oth.MaxSize];
     for (int i = 0; i <= Num; i++) {
@@ -52,7 +56,8 @@ TStack<T>::TStack(const TStack& oth) {
 }
 
 template <class T>
-TStack<T>::~TStack() {
+TStack<T>::~TStack() 
+{
     delete[] pMem;
 }
 
@@ -95,7 +100,8 @@ bool TStack<T>::operator!=(const TStack& oth) const
 }
 
 template <class T>
-T TStack<T>::Pop() {
+T TStack<T>::Pop() 
+{
     if (this->isEmpty()) {
         throw -1;
     }

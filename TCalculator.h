@@ -5,11 +5,10 @@
 #include <string>
 #include "TStack.cpp"
 
-
 using namespace std;
 
-
-class TCalculator {
+class TCalculator 
+{
 	string infix;
 	string postfix;
 	TStack<double> stNum;

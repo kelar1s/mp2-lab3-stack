@@ -1,9 +1,10 @@
 #include "TCalculator.h"
 #include <stdexcept>
 
-int main() {
+int main() 
+{
 	TCalculator calculator;
-	calculator.setInfix("(1.1 + 1.1) * 2");
+	calculator.setInfix("1 + 2");
 	calculator.setPostfix();
 	cout << calculator.getInfix() << endl;
 	cout << calculator.getPostfix() << endl;
