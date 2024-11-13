@@ -21,6 +21,7 @@ public:
 
 	int Prior(char op);
 	bool Check(string str);
+	bool CheckOperators(string str);
 
 	void setInfix(string str);
 	string getInfix();
