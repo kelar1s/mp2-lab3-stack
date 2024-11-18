@@ -17,7 +17,7 @@ public:
 	TCalculator();
 
 	double CalcPostfix();
-	//void Calc();
+	double Calc();
 
 	int Prior(char op);
 	bool Check(string str);
