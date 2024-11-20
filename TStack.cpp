@@ -23,7 +23,7 @@ public:
     bool operator==(const TStack& oth) const;
     bool operator!=(const TStack& oth) const;
 
-    bool isEmpty() { return Num == -1ü; };
+    bool isEmpty() { return Num == -1; };
     bool isFull() { return Num == MaxSize - 1; };
 
     void Push(T value);

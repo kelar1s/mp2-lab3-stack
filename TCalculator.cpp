@@ -28,6 +28,9 @@ double TCalculator::CalcPostfix()
                 break;
 
             case '/':
+                if (secondNum == 0) {
+                    throw - 1;
+                }
                 stNum.Push(firstNum / secondNum);
                 break;
             case '^':
@@ -43,9 +46,92 @@ double TCalculator::CalcPostfix()
     return result;
 }
 
+double TCalculator::Calc() {
+    stNum.Clear();
+    stChar.Clear();
+    string tmp = '(' + infix + ')';
+    for (int i = 0; i < tmp.size(); i++) {
+        if (tmp[i] == '(') {
+            stChar.Push('(');
+            if (tmp[i + 1] == '-') {
+                size_t idx;
+                double res = stod(&tmp[i + 1], &idx);
+                stNum.Push(res);
+                i += idx;
+            }
+        }
+        else if (tmp[i] == '+' || tmp[i] == '-' || tmp[i] == '*' || tmp[i] == '/' || tmp[i] == '^') {
+            while (Prior(stChar.Top()) >= Prior(tmp[i])) {
+                char a = stChar.Pop();
+                double secondNum = stNum.Pop();
+                double firstNum = stNum.Pop();
+                switch (a)
+                {
+                case '+':
+                    stNum.Push(firstNum + secondNum);
+                    break;
+                case '-':
+                    stNum.Push(firstNum - secondNum);
+                    break;
+                case '*':
+                    stNum.Push(firstNum * secondNum);
+                    break;
+                case '/':
+                    if (secondNum == 0) {
+                        throw - 1;
+                    }
+                    stNum.Push(firstNum / secondNum);
+                    break;
+                case '^':
+                    stNum.Push(pow(firstNum, secondNum));
+                    break;
+                }
+            }
+            stChar.Push(tmp[i]);
+        }
+        else if (tmp[i] >= '0' && tmp[i] <= '9' || tmp[i] == '.') {
+            size_t idx;
+            double res = stod(&tmp[i], &idx);
+            stNum.Push(res);
+            i += idx - 1;
+        }
+        else if (tmp[i] == ')') {
+            while (stChar.Top() != '(') {
+                char a = stChar.Pop();
+                double secondNum = stNum.Pop();
+                double firstNum = stNum.Pop();
+                switch (a)
+                {
+                case '+':
+                    stNum.Push(firstNum + secondNum);
+                    break;
+                case '-':
+                    stNum.Push(firstNum - secondNum);
+                    break;
+                case '*':
+                    stNum.Push(firstNum * secondNum);
+                    break;
+                case '/':
+                    if (secondNum == 0) {
+                        throw - 1;
+                    }
+                    stNum.Push(firstNum / secondNum);
+                    break;
+                case '^':
+                    stNum.Push(pow(firstNum, secondNum));
+                    break;
+                }
+            }
+            stChar.Pop();
+        }
+    }
+    double res = stNum.Pop();
+    if (!stNum.isEmpty()) throw - 1;
+    return res;
+}
+
 void TCalculator::setInfix(string str) 
 {
- 
     if (Check(str) && CheckOperators(str)) {
         infix = str;
     }
@@ -153,87 +239,4 @@ bool TCalculator::CheckOperators(string str) {
         }
     }
     return true;
-}
-
-//1 - число в стек
-//2 - ( в стек
-//3 - Такое же правило как и в прошлый раз - положить в стек операцию если приоритет >= оператора с вершины стека
-//4 - ) вычислить до открывающей скобки
-
-double TCalculator::Calc() {
-    stNum.Clear();
-    stChar.Clear();
-    string str = '(' + infix + ')';
-    str.erase(remove(str.begin(), str.end(), ' '), str.end());
-    for (int i = 0; i < str.size(); i++) {
-        if ((str[i] >= '0' && str[i] <= '9') || str[i] == '.') {
-            if (str[i - 1] == '-' && str[i - 2] == '(') {
-                stChar.Pop();
-                size_t idx;
-                double ntmp = stod(&postfix[i], &idx);
-                stNum.Push(-1 * ntmp);
-                i += idx - 1;
-            }
-            size_t idx;
-            double ntmp = stod(&postfix[i], &idx);
-            stNum.Push(ntmp);
-            i += idx - 1;
-        }
-        else if (str[i] == '(') {
-            stChar.Push(str[i]);
-        }
-        else if (str[i] == ')') {
-            char a = stChar.Pop();
-            while (a != '(') {
-                double secondNum = stNum.Pop();
-                double firstNum = stNum.Pop();
-                switch (a)
-                {
-                case '+':
-                    stNum.Push(firstNum + secondNum);
-                    break;
-                case '-':
-                    stNum.Push(firstNum - secondNum);
-                    break;
-                case '*':
-                    stNum.Push(firstNum * secondNum);
-                    break;
-                case '/':
-                    stNum.Push(firstNum / secondNum);
-                    break;
-                case '^':
-                    stNum.Push(pow(firstNum, secondNum));
-                    break;
-                }
-                stChar.Pop();
-            }
-        }
-        else if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^') {
-            while (Prior(stChar.Top()) >= Prior(str[i]) && !stChar.isEmpty()) {
-                double secondNum = stNum.Pop();
-                double firstNum = stNum.Pop();
-                char a = stChar.Pop();
-                switch (a)
-                {
-                case '+':
-                    stNum.Push(firstNum + secondNum);
-                    break;
-                case '-':
-                    stNum.Push(firstNum - secondNum);
-                    break;
-                case '*':
-                    stNum.Push(firstNum * secondNum);
-                    break;
-                case '/':
-                    stNum.Push(firstNum / secondNum);
-                    break;
-                case '^':
-                    stNum.Push(pow(firstNum, secondNum));
-                    break;
-                }
-            }
-            stChar.Push(str[i]);
-        }
-        stChar.Push(str[i]);
-    }
 }

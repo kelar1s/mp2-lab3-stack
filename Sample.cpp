@@ -25,5 +25,10 @@ int main()
 	cout << "Infix form: " << calculator.getInfix() << endl;
 	cout << "Postfix form: " << calculator.getPostfix() << endl;
 	cout << "Answer: " << calculator.CalcPostfix() << endl;
+
+	calculator.setInfix("(-1) + 1^2 + 3 / 6 - 5 * 2 + 9.5 - (-20)");
+	cout << "Infix form: " << calculator.getInfix() << endl;
+	cout << "Answer: " << calculator.Calc() << endl;
+	
 	return 0;
 }
