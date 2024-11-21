@@ -1,8 +1,6 @@
 #pragma once
 #include <iostream>
 
-using namespace std;
-
 const int MAX_STACK_SIZE = 1000;
 
 template <class T>

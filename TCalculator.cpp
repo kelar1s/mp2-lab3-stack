@@ -8,7 +8,7 @@ double TCalculator::CalcPostfix()
     for (int i = 0; i < postfix.size(); i++) { 
         if ((postfix[i] >= '0' && postfix[i] <= '9') || postfix[i] == '.') {
             size_t idx;
-            double ntmp = stod(&postfix[i], &idx);
+            double ntmp = std::stod(&postfix[i], &idx);
             stNum.Push(ntmp);
             i += idx - 1;
         }
@@ -49,13 +49,13 @@ double TCalculator::CalcPostfix()
 double TCalculator::Calc() {
     stNum.Clear();
     stChar.Clear();
-    string tmp = '(' + infix + ')';
+    std::string tmp = '(' + infix + ')';
     for (int i = 0; i < tmp.size(); i++) {
         if (tmp[i] == '(') {
             stChar.Push('(');
             if (tmp[i + 1] == '-') {
                 size_t idx;
-                double res = stod(&tmp[i + 1], &idx);
+                double res = std::stod(&tmp[i + 1], &idx);
                 stNum.Push(res);
                 i += idx;
             }
@@ -91,7 +91,7 @@ double TCalculator::Calc() {
         }
         else if (tmp[i] >= '0' && tmp[i] <= '9' || tmp[i] == '.') {
             size_t idx;
-            double res = stod(&tmp[i], &idx);
+            double res = std::stod(&tmp[i], &idx);
             stNum.Push(res);
             i += idx - 1;
         }
@@ -130,7 +130,7 @@ double TCalculator::Calc() {
     return res;
 }
 
-void TCalculator::setInfix(string str) 
+void TCalculator::setInfix(std::string str) 
 {
     if (Check(str) && CheckOperators(str)) {
         infix = str;
@@ -140,7 +140,7 @@ void TCalculator::setInfix(string str)
     }
 }
 
-string TCalculator::getInfix() 
+std::string TCalculator::getInfix() 
 {
     return infix;
 }
@@ -166,7 +166,7 @@ void TCalculator::setPostfix()
 {
     postfix = "";
     stChar.Clear();
-    string tmp = "(" + infix + ")";
+    std::string tmp = "(" + infix + ")";
     bool wasOperator = true;
     for (int i = 0; i < tmp.length(); i++) {
         if (tmp[i] == '(') {
@@ -208,12 +208,12 @@ void TCalculator::setPostfix()
 }
 
 
-string TCalculator::getPostfix() 
+std::string TCalculator::getPostfix() 
 {
     return postfix;
 }
 
-bool TCalculator::Check(string str) 
+bool TCalculator::Check(std::string str) 
 {
     TStack<char> s(100);
     for (int i = 0; i < str.size(); i++) {
@@ -229,7 +229,7 @@ bool TCalculator::Check(string str)
     return s.isEmpty();
 }
 
-bool TCalculator::CheckOperators(string str) {
+bool TCalculator::CheckOperators(std::string str) {
     str.erase(remove(str.begin(), str.end(), ' '), str.end());
     for (int i = 1; i < str.size(); i++) {
         if (str[i] == '+' || str[i] == '-' || str[i] == '*' || str[i] == '/' || str[i] == '^') {

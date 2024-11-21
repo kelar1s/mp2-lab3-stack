@@ -4,13 +4,22 @@
 #include <iostream>
 #include <string>
 #include "TStack.cpp"
-
-using namespace std;
-
+enum Operations
+{
+	tAdd = '+',
+	tSub = '-',
+	tMult = '*',
+	tDiv = '/',
+	tPow = '^',
+	tLeftBracket = '(',
+	tSin = 's',
+	tCos = 'c',
+	tExp = 'e'
+};
 class TCalculator 
 {
-	string infix;
-	string postfix;
+	std::string infix;
+	std::string postfix;
 	TStack<double> stNum;
 	TStack<char> stChar;
 public:
@@ -20,11 +29,11 @@ public:
 	double Calc();
 
 	int Prior(char op);
-	bool Check(string str);
-	bool CheckOperators(string str);
+	bool Check(std::string str);
+	bool CheckOperators(std::string str);
 
-	void setInfix(string str);
-	string getInfix();
+	void setInfix(std::string str);
+	std::string getInfix();
 	void setPostfix();
-	string getPostfix();
+	std::string getPostfix();
 };
