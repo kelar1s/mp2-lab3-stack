@@ -4,7 +4,7 @@
 int main() 
 {
 	TCalculator calculator;
-	calculator.setInfix("10 ^ 2 + 10 / 10 + 10 * 2 + (1 + (1 + 1))");
+	/*calculator.setInfix("10 ^ 2 + 10 / 10 + 10 * 2 + (1 + (1 + 1))");
 	calculator.setPostfix();
 	cout << "Infix form: " << calculator.getInfix() << endl;
 	cout << "Postfix form: " << calculator.getPostfix() << endl;
@@ -24,11 +24,16 @@ int main()
 	calculator.setPostfix();
 	cout << "Infix form: " << calculator.getInfix() << endl;
 	cout << "Postfix form: " << calculator.getPostfix() << endl;
-	cout << "Answer: " << calculator.CalcPostfix() << endl;
+	cout << "Answer: " << calculator.CalcPostfix() << endl;*/
 
-	calculator.setInfix("(-1) + 1^2 + 3 / 6 - 5 * 2 + 9.5 - (-20)");
-	cout << "Infix form: " << calculator.getInfix() << endl;
-	cout << "Answer: " << calculator.Calc() << endl;
+	calculator.setInfix("sin(90) + cos(90) + exp(2)");
+	std::cout << "Infix form: " << calculator.getInfix() << std::endl;
+	std::cout << "Answer: " << calculator.Calc() << std::endl;
 	
+	calculator.setInfix("1 + cos(-30)^2 + exp(30)");
+	calculator.setPostfix();
+	std::cout << "Postfix form: " << calculator.getPostfix() << std::endl;
+
+
 	return 0;
 }

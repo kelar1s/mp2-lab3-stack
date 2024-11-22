@@ -30,7 +30,6 @@ public:
 
 	int Prior(char op);
 	bool Check(std::string str);
-	bool CheckOperators(std::string str);
 
 	void setInfix(std::string str);
 	std::string getInfix();
