@@ -3,49 +3,61 @@
 
 TCalculator::TCalculator(): stNum(100), stChar(100) {}
 
-double TCalculator::CalcPostfix() 
-{
+double TCalculator::CalcPostfix() {
     stNum.Clear();
-    for (int i = 0; i < postfix.size(); i++) { 
-        if ((postfix[i] >= '0' && postfix[i] <= '9') || postfix[i] == '.') {
+    for (int i = 0; i < postfix.size(); i++) {
+        if (postfix[i] >= '0' && postfix[i] <= '9' || postfix[i] == '.'
+            || postfix[i] == '-' && postfix[i + 1] >= '0' && postfix[i + 1] <= '9') {
             size_t idx;
-            double ntmp = std::stod(&postfix[i], &idx);
-            stNum.Push(ntmp);
+            double tmp = std::stod(&postfix[i], &idx);
+            stNum.Push(tmp);
             i += idx - 1;
         }
-        else if (postfix[i] == '+' || postfix[i] == '-' || postfix[i] == '*' || postfix[i] == '/' || postfix[i] == '^') {
+        else if (postfix[i] == tAdd || postfix[i] == tSub || postfix[i] == tMult || postfix[i] == tDiv || postfix[i] == tPow) {
             double secondNum = stNum.Pop();
             double firstNum = stNum.Pop();
             switch (postfix[i])
             {
-            case '+':
+            case tAdd:
                 stNum.Push(firstNum + secondNum);
                 break;
-            case '-':
+            case tSub:
                 stNum.Push(firstNum - secondNum);
                 break;
-            case '*':
+            case tMult:
                 stNum.Push(firstNum * secondNum);
                 break;
-
-            case '/':
+            case tDiv:
                 if (secondNum == 0) {
                     throw - 1;
                 }
                 stNum.Push(firstNum / secondNum);
                 break;
-            case '^':
+            case tPow:
                 stNum.Push(pow(firstNum, secondNum));
                 break;
             }
         }
+        else if (postfix[i] == 'c' && postfix.substr(i, 3) == "cos") {
+            i += 2;
+            stNum.Push(cos(stNum.Pop()));
+        }
+        else if (postfix[i] == 's' && postfix.substr(i, 3) == "sin") {
+            i += 2;
+            stNum.Push(sin(stNum.Pop()));
+        }
+        else if (postfix[i] == 'e' && postfix.substr(i, 3) == "exp") {
+            i += 2;
+            stNum.Push(exp(stNum.Pop()));
+        }
     }
     double result = stNum.Pop();
     if (!stNum.isEmpty()) {
-        throw -1;
+        throw - 1;
     }
     return result;
 }
+
 
 double TCalculator::Calc() {
     stNum.Clear();
