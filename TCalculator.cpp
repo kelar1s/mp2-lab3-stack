@@ -73,45 +73,44 @@ double TCalculator::Calc() {
                 i += idx;
             }
         }
-
-        else if (tmp[i] == 's') {
-            if (tmp[i + 1] == 'i' && tmp[i + 2] == 'n' && tmp[i + 3] == '(') {
-                stChar.Push(tSin);
-                i += 3;
-                if (tmp[i + 1] == '-') {
-                    size_t idx;
-                    double res = std::stod(&tmp[i + 1], &idx);
-                    stNum.Push(res);
-                    i += idx;
-                }
+        else if ((tmp[i] >= '0' && tmp[i] <= '9') || tmp[i] == '.') {
+            size_t idx;
+            double res = std::stod(&tmp[i], &idx);
+            stNum.Push(res);
+            i += idx - 1;
+        }
+        else if (tmp[i] == 's' && tmp.substr(i, 4) == "sin(") {
+            stChar.Push(tSin);
+            i += 3;
+            if (tmp[i + 1] == '-') {
+                size_t idx;
+                double res = std::stod(&tmp[i + 1], &idx);
+                stNum.Push(res);
+                i += idx;
             }
         }
-        else if (tmp[i] == 'c') {
-            if (tmp[i + 1] == 'o' && tmp[i + 2] == 's' && tmp[i + 3] == '(') {
-                stChar.Push(tCos);
-                i += 3;
-                if (tmp[i + 1] == '-') {
-                    size_t idx;
-                    double res = std::stod(&tmp[i + 1], &idx);
-                    stNum.Push(res);
-                    i += idx;
-                }
+        else if (tmp[i] == 'c' && tmp.substr(i, 4) == "cos(") {
+            stChar.Push(tCos);
+            i += 3;
+            if (tmp[i + 1] == '-') {
+                size_t idx;
+                double res = std::stod(&tmp[i + 1], &idx);
+                stNum.Push(res);
+                i += idx;
             }
         }
-        else if (tmp[i] == 'e') {
-            if (tmp[i + 1] == 'x' && tmp[i + 2] == 'p' && tmp[i + 3] == '(') {
-                stChar.Push(tExp);
-                i += 3;
-                if (tmp[i + 1] == '-') {
-                    size_t idx;
-                    double res = std::stod(&tmp[i + 1], &idx);
-                    stNum.Push(res);
-                    i += idx;
-                }
+        else if (tmp[i] == 'e' && tmp.substr(i, 4) == "exp(") {
+            stChar.Push(tExp);
+            i += 3;
+            if (tmp[i + 1] == '-') {
+                size_t idx;
+                double res = std::stod(&tmp[i + 1], &idx);
+                stNum.Push(res);
+                i += idx;
             }
         }
         else if (tmp[i] == tAdd || tmp[i] == tSub || tmp[i] == tMult || tmp[i] == tDiv || tmp[i] == tPow) {
-            while (!stChar.isEmpty() && Prior(stChar.Top()) >= Prior(tmp[i])) {
+            while (Prior(stChar.Top()) >= Prior(tmp[i])) {
                 char a = stChar.Pop();
                 double secondNum = stNum.Pop();
                 double firstNum = stNum.Pop();
@@ -139,63 +138,51 @@ double TCalculator::Calc() {
             }
             stChar.Push(tmp[i]);
         }
-        else if ((tmp[i] >= '0' && tmp[i] <= '9') || tmp[i] == '.') {
-            size_t idx;
-            double res = std::stod(&tmp[i], &idx);
-            stNum.Push(res);
-            i += idx - 1;
-        }
-        else if (tmp[i] == ')') {
-            while (!stChar.isEmpty() && stChar.Top() != tLeftBracket) {
-                char a = stChar.Pop();
-                if (a == tSin || a == tCos || a == tExp) {
-                    double Num = stNum.Pop();
-                    switch (a) {
-                    case tSin:
-                        stNum.Push(sin(Num));
-                        break;
-                    case tCos:
-                        stNum.Push(cos(Num));
-                        break;
-                    case tExp:
-                        stNum.Push(exp(Num));
-                        break;
+        else if (tmp[i] == ')'){
+            while (!(stChar.Top() == tLeftBracket || stChar.Top() == tSin || stChar.Top() == tCos || stChar.Top() == tExp)) {
+                double secondNum = stNum.Pop();
+                double firstNum = stNum.Pop();
+                switch (stChar.Pop())
+                {
+                case tAdd:
+                    stNum.Push(firstNum + secondNum);
+                    break;
+                case tSub:
+                    stNum.Push(firstNum - secondNum);
+                    break;
+                case tMult:
+                    stNum.Push(firstNum * secondNum);
+                    break;
+                case tDiv:
+                    if (secondNum == 0) {
+                        throw - 1;
                     }
-                }
-                else {
-                    double secondNum = stNum.Pop();
-                    double firstNum = stNum.Pop();
-                    switch (a)
-                    {
-                    case tAdd:
-                        stNum.Push(firstNum + secondNum);
-                        break;
-                    case tSub:
-                        stNum.Push(firstNum - secondNum);
-                        break;
-                    case tMult:
-                        stNum.Push(firstNum * secondNum);
-                        break;
-                    case tDiv:
-                        if (secondNum == 0) {
-                            throw - 1;
-                        }
-                        stNum.Push(firstNum / secondNum);
-                        break;
-                    case tPow:
-                        stNum.Push(pow(firstNum, secondNum));
-                        break;
-                    }
+                    stNum.Push(firstNum / secondNum);
+                    break;
+                case tPow:
+                    stNum.Push(pow(firstNum, secondNum));
+                    break;
                 }
             }
-            if (!stChar.isEmpty() && stChar.Top() == tLeftBracket) {
-                stChar.Pop();
+            switch (stChar.Pop())
+            {
+            case tLeftBracket:
+                break;
+            case tSin:
+                stNum.Push(sin(stNum.Pop()));
+                break;
+            case tCos:
+                stNum.Push(cos(stNum.Pop()));
+                break;
+            case tExp:
+                stNum.Push(exp(stNum.Pop()));
+                break;
             }
         }
     }
-    double res = stNum.Pop();
+    double result = stNum.Pop();
     if (!stNum.isEmpty()) throw - 1;
-    return res;
+    return result;
 }
 
 void TCalculator::setInfix(std::string str) 
@@ -230,21 +217,18 @@ int TCalculator::Prior(char op)
     return -1;
 }
 
-void TCalculator::setPostfix() 
+void TCalculator::setPostfix()
 {
     postfix = "";
     stChar.Clear();
     std::string tmp = "(" + infix + ")";
-    for (int i = 0; i < tmp.length(); i++) 
+    for (int i = 0; i < tmp.length(); i++)
     {
         if (tmp[i] == tLeftBracket) {
             stChar.Push(tLeftBracket);
             if (tmp[i + 1] == '-') {
-                size_t idx;
-                double res = std::stod(&tmp[i + 1], &idx);
-                std::string str = std::to_string(res);
-                postfix += str.substr(0, str.find_last_not_of('0')) + ' ';
-                i += idx;
+                postfix += '-';
+                i++;
             }
         }
         else if ((tmp[i] >= '0' && tmp[i] <= '9')) {
@@ -265,33 +249,24 @@ void TCalculator::setPostfix()
             stChar.Push(tSin);
             i += 3;
             if (tmp[i + 1] == '-') {
-                size_t idx;
-                double res = std::stod(&tmp[i + 1], &idx);
-                std::string str = std::to_string(res);
-                postfix += str.substr(0, str.find_last_not_of('0')) + ' ';
-                i += idx;
+                postfix += '-';
+                i++;
             }
         }
         else if (tmp[i] == 'c' && tmp.substr(i, 4) == "cos(") {
             stChar.Push(tCos);
             i += 3;
             if (tmp[i + 1] == '-') {
-                size_t idx;
-                double res = std::stod(&tmp[i + 1], &idx);
-                std::string str = std::to_string(res);
-                postfix += str.substr(0, str.find_last_not_of('0')) + ' ';
-                i += idx;
+                postfix += '-';
+                i++;
             }
         }
         else if (tmp[i] == 'e' && tmp.substr(i, 4) == "exp(") {
             stChar.Push(tExp);
             i += 3;
             if (tmp[i + 1] == '-') {
-                size_t idx;
-                double res = std::stod(&tmp[i + 1], &idx);
-                std::string str = std::to_string(res);
-                postfix += str.substr(0, str.find_last_not_of('0')) + ' ';
-                i += idx;
+                postfix += '-';
+                i++;
             }
         }
         else if (tmp[i] == ')') {
@@ -310,7 +285,7 @@ void TCalculator::setPostfix()
             case tExp:
                 postfix += "exp ";
                 break;
-            }     
+            }
         }
     }
 }

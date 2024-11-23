@@ -3,6 +3,7 @@
 #include <msclr\marshal_cppstd.h>
 #include "..\..\TCalculator.h"
 #include "..\..\TCalculator.cpp"
+#include "exception"
 namespace VisualCalculator {
 
 	using namespace System;
@@ -41,6 +42,9 @@ namespace VisualCalculator {
 	protected:
 	private: System::Windows::Forms::Button^ button1;
 	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Label^ label2;
+	private: System::Windows::Forms::Label^ label3;
+
 
 	private:
 		/// <summary>
@@ -58,6 +62,8 @@ namespace VisualCalculator {
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
+			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// textBox1
@@ -88,18 +94,44 @@ namespace VisualCalculator {
 			this->label1->AutoSize = true;
 			this->label1->Font = (gcnew System::Drawing::Font(L"Arial", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->label1->Location = System::Drawing::Point(143, 197);
+			this->label1->Location = System::Drawing::Point(138, 162);
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(87, 22);
 			this->label1->TabIndex = 2;
 			this->label1->Text = L"Answer:";
 			this->label1->Click += gcnew System::EventHandler(this, &MainForm::label1_Click);
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Arial", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label2->Location = System::Drawing::Point(138, 200);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(56, 22);
+			this->label2->TabIndex = 3;
+			this->label2->Text = L"Infix:";
+			this->label2->Click += gcnew System::EventHandler(this, &MainForm::label2_Click);
+			// 
+			// label3
+			// 
+			this->label3->AutoSize = true;
+			this->label3->Font = (gcnew System::Drawing::Font(L"Arial", 14.25F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->label3->Location = System::Drawing::Point(138, 239);
+			this->label3->Name = L"label3";
+			this->label3->Size = System::Drawing::Size(81, 22);
+			this->label3->TabIndex = 4;
+			this->label3->Text = L"Postfix:";
+			this->label3->Click += gcnew System::EventHandler(this, &MainForm::label3_Click);
+			// 
 			// MainForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(611, 329);
+			this->Controls->Add(this->label3);
+			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->textBox1);
@@ -111,22 +143,36 @@ namespace VisualCalculator {
 		}
 #pragma endregion
 	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
-		std::string infix;
-		infix = msclr::interop::marshal_as<std::string>(textBox1->Text);
-		TCalculator calc;
-		calc.setInfix(infix);
-		label1->Text = "Answer: " + Convert::ToString(calc.Calc());
+		try {
+			std::string infix = msclr::interop::marshal_as<std::string>(textBox1->Text);
+			TCalculator calc;
+			calc.setInfix(infix);
+			label1->Text = "Answer: " + Convert::ToString(calc.Calc());
+			System::String^ managedInfix = msclr::interop::marshal_as<System::String^>(infix);
+			label2->Text = "Infix: " + managedInfix;
+			calc.setPostfix();
+			std::string postfix = calc.getPostfix();
+			System::String^ managedPostfix = msclr::interop::marshal_as<System::String^>(postfix);
+			label3->Text = "Postfix: " + managedPostfix;
+		}
+		catch (System::Exception^ ex) {
+			label1->Text = "Error: Check the spelling of the expression!";
+			label2->Text = "";
+			label3->Text = "";
+		}
 	}
-
 	private: System::Void label1_Click(System::Object ^ sender, System::EventArgs ^ e) {
 	}
 	private: System::Void textBox1_TextChanged(System::Object^ sender, System::EventArgs^ e) {
 	}
-
 	private: System::Void button1_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
 		if (e->KeyData == Keys::Enter) {
 			button1_Click(sender, e);
 		}
 	}
+private: System::Void label3_Click(System::Object^ sender, System::EventArgs^ e) {
+}
+private: System::Void label2_Click(System::Object^ sender, System::EventArgs^ e) {
+}
 };
 }
