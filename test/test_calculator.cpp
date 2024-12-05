@@ -41,7 +41,7 @@ TEST(TCalculator, can_calculate_correct_postfix_with_add_operations)
 	TCalculator calc;
 	calc.setInfix("(1 + 2 + 3 + 4 + (6 + 6) + 12 + 0.5)");
 	calc.setPostfix();
-	EXPECT_EQ(calc.CalcPostfix(), 34.5);
+	EXPECT_EQ(calc.CalcPostfix(), (1 + 2 + 3 + 4 + (6 + 6) + 12 + 0.5));
 };
 
 TEST(TCalculator, can_calculate_correct_postfix_with_sub_operations)
@@ -49,7 +49,7 @@ TEST(TCalculator, can_calculate_correct_postfix_with_sub_operations)
 	TCalculator calc;
 	calc.setInfix("(100 - 50) - 25 - 1 - 2 - (3 - 4) - 1 - 1.5");
 	calc.setPostfix();
-	EXPECT_EQ(calc.CalcPostfix(), 20.5);
+	EXPECT_EQ(calc.CalcPostfix(), (100 - 50) - 25 - 1 - 2 - (3 - 4) - 1 - 1.5);
 };
 
 TEST(TCalculator, can_calculate_correct_postfix_with_mult_operations)
