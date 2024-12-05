@@ -58,7 +58,6 @@ double TCalculator::CalcPostfix() {
     return result;
 }
 
-
 double TCalculator::Calc() {
     stNum.Clear();
     stChar.Clear();

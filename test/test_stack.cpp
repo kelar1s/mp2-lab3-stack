@@ -55,7 +55,9 @@ TEST(TStack, can_clear_stack)
 	s.Clear();
 	EXPECT_EQ(s.isEmpty(), 1);
 }
-
+//SOME EDITS
+//SOME EDITS IN TEST-BRANCH
+//SOME EDITS IN TEST-BRANCH
 TEST(TStack, can_assign_stack_to_itself)
 {
 	TStack<int> s(4);
