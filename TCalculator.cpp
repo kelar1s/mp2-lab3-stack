@@ -1,8 +1,6 @@
 #include "TCalculator.h"
 #include <math.h>
 
-TCalculator::TCalculator(): stNum(100), stChar(100) {}
-
 double TCalculator::CalcPostfix() {
     stNum.Clear();
     for (int i = 0; i < postfix.size(); i++) {
@@ -296,7 +294,7 @@ std::string TCalculator::getPostfix()
 
 bool TCalculator::Check(std::string str) 
 {
-    TStack<char> s(100);
+    TStack<char> s;
     for (int i = 0; i < str.size(); i++) {
         if (str[i] == '(')
             s.Push('(');

@@ -23,7 +23,7 @@ class TCalculator
 	TStack<double> stNum;
 	TStack<char> stChar;
 public:
-	TCalculator();
+	TCalculator() : stNum(TStack<double>()), stChar(TStack<char>()) {};
 
 	double CalcPostfix();
 	double Calc();
